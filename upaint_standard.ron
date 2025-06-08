@@ -1,0 +1,507 @@
+Config(
+    // All alternatives are listed in `color_theme_presets!(...)` in `src/config/color_theme.rs`
+    color_theme_preset: Basic,
+
+    // Automatically reloads config when local config file is modified.
+    // This options itself does not support hot reloading.
+    autoreload_config: true,
+
+    // Can be disabled so keystroke used to close message popup is also passed through as normal
+    message_popup_suppress_keystroke: true,
+
+    // Sets "n" as standard input mode
+    input_mode_standard: InputMode("n"),
+
+    // Sets input mode to "n" at launch
+    input_mode_initial: InputMode("n"),
+
+    // Row/column numbers
+    numbers: (
+        row: (
+            enable: true,
+            relative: false,
+        ),
+        column: (
+            enable: true,
+            relative: false,
+        ),
+    ),
+
+    character_mirrors: (
+        x: {
+            '/': '\\',
+            '<': '>',
+            '(': ')',
+            '[': ']',
+            '{': '}',
+        },
+        y: {
+            '/': '\\',
+            '.': ''',
+            ',': '\"',
+            '_': '¨',
+        },
+    ),
+
+    line_drawing_characters: (
+        straight_horizontal: '-',
+        straight_vertical: '|',
+        steep_rising: '/',
+        steep_falling: '\\',
+        
+        // Using unicode box drawing characters:
+        // straight_horizontal: "─",
+        // straight_vertical: "│",
+        // steep_rising: "╱",
+        // steep_falling: "╲",
+
+        gentle_slope: {
+            '¨': -0.5,
+            '\"': -0.3,
+            ''': -0.25,
+            '-': 0,
+            '.': 0.25,
+            ',': 0.3,
+            '_': 0.5,
+        },
+    ),
+
+    color_theme: (
+        row_numbers: (
+            fg: Gray,
+            bg: Reset,
+            modifiers: Modifier(""),
+        ),
+        column_numbers: (
+            fg: Gray,
+            bg: Reset,
+            modifiers: Modifier(""),
+        ),
+        status_bar: (
+            fg: White,
+            bg: DarkGray,
+            modifiers: Modifier(""),
+        ),
+        command_line: (
+            fg: Reset,
+            bg: Reset,
+            modifiers: Modifier(""),
+        ),
+        input_mode: (
+            fg: Reset,
+            bg: Reset,
+            modifiers: Modifier("BOLD"),
+        ),
+        user_feedback: (
+            fg: Reset,
+            bg: Reset,
+            modifiers: Modifier(""),
+        ),
+        canvas: (
+            visual_mode_highlight_bg: Gray,
+            selection_highlight_bg: DarkGray,
+            default_style: (
+                fg: Reset,
+                bg: Reset,
+                modifiers: Modifier(""),
+            ),
+            standard_colors: (
+                black: Black,
+                red: Red,
+                green: Green,
+                yellow: Yellow,
+                blue: Blue,
+                magenta: Magenta,
+                cyan: Cyan,
+                white: Gray,
+                bright_black: DarkGray,
+                bright_red: LightRed,
+                bright_green: LightGreen,
+                bright_yellow: LightYellow,
+                bright_blue: LightBlue,
+                bright_magenta: LightMagenta,
+                bright_cyan: LightCyan,
+                bright_white: White,
+            ),
+        ),
+    ),
+
+    input_mode: {
+        ("i"): (
+            handler: Action,
+            base_keymaps: [("n")],
+            on_enter: Some(SetCursorPositionIterator(
+                jump: Diagonals,
+                direction: FromKeystrokes,
+            )),
+            keymaps: (
+                actions: Some({
+                    "<BS>": MoveCursorBackInsertChar(ch: ' '),
+                    "": InsertCharMoveCursor(ch: FromKeystrokes),
+                }),
+            ),
+        ),
+        ("I"): (
+            handler: Action,
+            base_keymaps: [("i")],
+            on_enter: Some(SetCursorPositionIterator(
+                jump: NoJump,
+                direction: FromKeystrokes,
+            )),
+            keymaps: ( ),
+        ),
+        ("c"): (
+            handler: Command,
+            base_keymaps: [],
+            on_enter: Some(InitCommandLine( )),
+            keymaps: ( ),
+        ),
+        ("p"): (
+                
+            handler: ColorPicker,
+            base_keymaps: [],
+            on_enter: Some(InitColorPicker(target: ColorOrSlot(Active))),
+            keymaps: ( ),
+        ),
+        ("v"): (
+            handler: Action,
+            base_keymaps: [("n")],
+            on_enter: Some(InitVisualRect( )),
+            keymaps: (
+                actions: Some({
+                    "o": VisualRectSwapCorners( ),
+                    "<Enter>": Batch([
+                        HighlightTrail(motion: VisualRectMotion( )),
+                        ChangeMode(mode: "n"),
+                    ]),
+                    "": Operation(
+                        operator: FromKeystrokes,
+                        motion: VisualRectMotion( ),
+                        return_to_standard_mode: true,
+                    ),
+                }),
+            ),
+        ),
+        ("L"): (
+            handler: Action,
+            base_keymaps: [("n")],
+            on_enter: Some(LineDrawingStartNewLine( )),
+            keymaps: (
+                actions: Some({
+                    " ": LineDrawingStartNewLine( ),
+                    "<Enter>": Batch([
+                        LineDrawingStartNewLine( ),
+                        ChangeMode(mode: "n"),
+                    ]),
+                    "": [
+                        MoveCursor(motion: Repeat(
+                            count: FromKeystrokes,
+                            motion: FixedNumberOfCells(
+                                direction: FromKeystrokes,
+                                jump: DirectionAsStride,
+                            ),
+                        ),),
+                        MoveCursor(motion: FromKeystrokes),
+                    ],
+                }),
+            ),
+        ),
+        ("n"): (
+            handler: Action,
+            base_keymaps: [("base")],
+            keymaps: (
+                actions: Some({
+                    ":": ChangeMode(mode: "c"),
+                    "i": ChangeMode(mode: "i"), 
+                    "I": ChangeMode(mode: "I"), 
+                    "gc": ChangeMode(mode: "p"),
+                    "v": ChangeMode(mode: "v"),
+                    "L": ChangeMode(mode: "L"),
+                    "gp": Pipette(
+                        ground: FromKeystrokes,
+                        slot: Active,
+                    ),
+                    "\"": SetYankActive(slot: FromKeystrokes),
+                    "o": SetSelectionActive(
+                        slot: FromKeystrokes,
+                        highlight: true,
+                    ),
+                    "O": HighlightTrail(motion: Stay( )),
+                    "m": HighlightTrail(motion: FromKeystrokes),
+                    "p": Paste(slot: Active),
+                    "<C-p>": Paste(slot: Active),
+                    "#": SetColorOrSlotActive(color_or_slot: FromKeystrokes),
+                    "q": MacroRecordingStartStop(start_or_stop: FromKeystrokes),
+                    "gm": MirrorYank(
+                        slot: Active,
+                        axis: FromKeystrokes,
+                    ),
+                    "gmb": Batch([
+                        MirrorYank(slot: Active, axis: X),
+                        MirrorYank(slot: Active, axis: Y),
+                    ]),
+                    "<F5>": ReloadConfig( ),
+                    "zz": ChangeFocus(type_horizontal: Center, type_vertical: Center),
+                    "zl": ChangeFocus(type_horizontal: Start(0)),
+                    "zh": ChangeFocus(type_horizontal: End(0)),
+                    "zj": ChangeFocus(type_vertical: Start(0)),
+                    "zk": ChangeFocus(type_vertical: End(0)),
+                    "": [
+                        Repeat(
+                            count: FromKeystrokes,
+                            action: FromKeystrokes,
+                        ),
+                        Operation(
+                            operator: FromKeystrokes,
+                            motion: Highlighted( ),
+                        ),
+                        Batch([
+                            MoveCursor(
+                                motion: Repeat(
+                                    count: 1,
+                                    motion: FixedNumberOfCells(
+                                        direction: FromKeystrokes,
+                                        jump: DirectionAsStride,
+                                    ),
+                                ),
+                                highlight_trail: false,
+                            ),
+                            HighlightClear( ),
+                        ]),
+                        MoveCursor(
+                            motion: FromKeystrokes,
+                            highlight_trail: true,
+                        ),
+                    ],
+                }),
+                actions_repeatable: Some({
+                    "u": Undo( ),
+                    "U": Redo( ),
+                    "@": MacroExecute(slot: FromKeystrokes),
+                }),
+            ),
+        ),
+        ("base"): (
+            handler: Action,
+            base_keymaps: [],
+            keymaps: (
+                actions: Some({
+                    "<C-c>": ChangeMode(mode: "n"),
+                    "<C-k>": ChangeMode(mode: "n"),
+                    "<Esc": ChangeMode(mode: "n"),
+                }),
+                operators: Some({
+                    "c": Colorize(ground: Foreground),
+                    "b": Colorize(ground: Background),
+                    "r": Replace(ch: FromKeystrokes),
+                    "a": UpdateSelection(
+                        operator: Add,
+                        slot: Active,
+                        highlight: true,
+                    ),
+                    "-": UpdateSelection(
+                        operator: Subtract,
+                        slot: Active,
+                        highlight: true,
+                    ),
+                    "s": UpdateSelection(
+                        operator: Overwrite,
+                        slot: Active,
+                        highlight: true,
+                    ),
+                    "y": Yank(
+                        content_type: "ALL",
+                        slot: Active,
+                    ),
+                    "Y": Yank(
+                        content_type: FromKeystrokes,
+                        slot: Active,
+                    ),
+                    "d": Cut(
+                        content_type: "ALL",
+                        slot: Active,
+                    ),
+                    "D": Cut(
+                        content_type: FromKeystrokes,
+                        slot: Active,
+                    ),
+                    "gc": ColorPickerOperator(
+                        ground: FromKeystrokes,
+                        mode: "p",
+                    ),
+                }),
+                motions: Some({
+                    " ": Stay( ),
+                    "s": SelectionMotion(slot: Active),
+                    "J": GoToMark(
+                        jump: Diagonals,
+                        slot: FromKeystrokes,
+                    ),
+                    "i": ContinuousRegion(
+                        relative_type: FromKeystrokes,
+                        diagonals_allowed: false,
+                    ),
+                    "a": ContinuousRegion(
+                        relative_type: FromKeystrokes,
+                        diagonals_allowed: true,
+                    ),
+                    "A": MatchingCells(content_type: FromKeystrokes),
+                    "": Repeat(
+                        count: FromKeystrokes,
+                        motion: FromKeystrokes,
+                    ),
+                }),
+                motions_repeatable: Some({
+                    "w": WordBoundary(
+                        direction: FromKeystrokes,
+                        boundary_type: "START",
+                    ),
+                    "e": WordBoundary(
+                        direction: FromKeystrokes,
+                        boundary_type: "END",
+                    ),
+                    "f": FindChar(
+                        direction: FromKeystrokes,
+                        ch: FromKeystrokes,
+                    ),
+                    ",": FindCharRepeat(direction_reversed: false),
+                    ";": FindCharRepeat(direction_reversed: true),
+                    "": FixedNumberOfCells(
+                        direction: FromKeystrokes,
+                        jump: DirectionAsStride,
+                    ),
+                }),
+                counts: Some({
+                    "": TypeDecimal,
+                }),
+                directions: Some({
+                    "h": (0, -1),
+                    "<Left>": (0, -1),
+                    "j": (1, 0),
+                    "<Down>": (1, 0),
+                    "k": (-1, 0),
+                    "<Up>": (-1, 0),
+                    "l": (0, 1),
+                    "<Right>": (0, 1),
+                    "y": (-1, -2),
+                    "u": (-1, -1),
+                    "i": (-1, 1),
+                    "o": (-1, 2),
+                    "n": (1, -2),
+                    "m": (1, -1),
+                    ",": (1, 1),
+                    ".": (1, 2),
+                }),
+                grounds: Some({
+                    "f": Foreground,
+                    "b": Background,
+                }),
+                axes: Some({
+                    "x": X,
+                    "y": Y,
+                }),
+                rotation_directions: Some({
+                    "k": Clockwise,
+                    "j": Counterclockwise,
+                }),
+                characters: Some({
+                    "<C-u>-": "—",
+                    "": Type,
+                }),
+                bools: Some({
+                    "f": false,
+                    "t": true,
+                    "n": false,
+                    " ": true,
+                }),
+                word_boundary_types: Some({
+                    "a": "ANY",
+                    "s": "START",
+                    "e": "END",
+                }),
+                colors: Some({
+                    " ": "Reset",
+                    "b": "Black",
+                    "r": "Red",
+                    "g": "Green",
+                    "y": "Yellow",
+                    "l": "Blue",
+                    "m": "Magenta",
+                    "c": "Cyan",
+                    "w": "Gray", // Non-bright white
+                    "B": "DarkGray", // Bright black
+                    "R": "LightRed",
+                    "G": "LightGreen",
+                    "Y": "LightYellow",
+                    "L": "LightBlue",
+                    "M": "LightMagenta",
+                    "C": "LightCyan",
+                    "W": "White",
+                }),
+                color_or_slots: Some({
+                    "s": Slot(FromKeystrokes),
+                    "": [
+                        Color(FromKeystrokes),
+                        Slot(FromKeystrokes),
+                    ],
+                }),
+                color_or_slot_specifications: Some({
+                    " ": Active,
+                    "": Specific(FromKeystrokes),
+                }),
+                color_picker_target_motions: Some({
+                    "": (
+                        ground: FromKeystrokes,
+                        motion: FromKeystrokes,
+                    ),
+                }),
+                color_picker_targets: Some({
+                    " ": ColorOrSlot(Active),
+                    "": [
+                        Motion(FromKeystrokes),
+                        ColorOrSlot(FromKeystrokes),
+                    ],
+                }),
+                canvas_iteration_jumps: Some({
+                    "n": "NoJump",
+                    "d": "Diagonals",
+                    "s": "DirectionAsStride",
+                }),
+                update_selection_operators: Some({
+                    "a": "Add",
+                    "s": "Overwrite",
+                    "z": "Subtract",
+                }),
+                cell_content_types: Some({
+                    "n": "NONE",
+                    "a": "ALL",
+                    "t": "TEXT",
+                    "f": "FG",
+                    "b": "BG",
+                    "c": "COLOR",
+                    "F": "FG | TEXT",
+                    "B": "BG | TEXT",
+                    "C": "COLOR | TEXT",
+                    "m": "MODIFIERS",
+                }),
+                continuous_region_relative_types: Some({
+                    "w": NonBlank("TEXT"),
+                    "s": Same("TEXT"),
+                    " ": NonBlank("FromKeystrokes"),
+                    "": Same("FromKeystrokes"),
+                }),
+                keymap_u32: Some({ }),
+                selection_slot_specifications: Some({
+                    "": Specific(FromKeystrokes),
+                }),
+                selection_specifications: Some({
+                    "s": Slot(FromKeystrokes),
+                    "": Motion(FromKeystrokes),
+                }),
+                yank_slot_specifications: Some({
+                    "": Specific(FromKeystrokes),
+                }),
+            ),
+        ),
+    },
+)
