@@ -280,10 +280,9 @@ Config(
             keymaps: ( ),
         ),
         ("p"): (
-                
             handler: ColorPicker,
             base_keymaps: [],
-            on_enter: Some(InitColorPicker(target: ColorOrSlot(Active))),
+            on_enter: Some(InitColorPicker(target: FromKeystrokes)),
             keymaps: ( ),
         ),
         ("v"): (
@@ -376,7 +375,7 @@ Config(
                         ),
                         Operation(
                             operator: FromKeystrokes,
-                            motion: Highlighted( ),
+                            motion: FromKeystrokes,
                         ),
                         Batch([
                             MoveCursor(
@@ -399,7 +398,7 @@ Config(
                 }),
                 actions_repeatable: Some({
                     "u": Undo( ),
-                    "U": Redo( ),
+                    "<C-r>": Redo( ),
                     "@": MacroExecute(slot: FromKeystrokes),
                 }),
             ),
@@ -469,6 +468,7 @@ Config(
                         diagonals_allowed: true,
                     ),
                     "A": MatchingCells(content_type: FromKeystrokes),
+                    "m": Highlighted( ),
                     "": Repeat(
                         count: FromKeystrokes,
                         motion: FromKeystrokes,
