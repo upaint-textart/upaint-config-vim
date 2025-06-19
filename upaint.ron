@@ -392,7 +392,7 @@ Config(
                         ]),
                         MoveCursor(
                             motion: FromKeystrokes,
-                            highlight_trail: true,
+                            highlight_trail: false,
                         ),
                     ],
                 }),
@@ -454,6 +454,7 @@ Config(
                 }),
                 motions: Some({
                     " ": Stay( ),
+                    "m": Highlighted( ),
                     "s": SelectionMotion(slot: Active),
                     "J": GoToMark(
                         jump: Diagonals,
@@ -468,7 +469,6 @@ Config(
                         diagonals_allowed: true,
                     ),
                     "A": MatchingCells(content_type: FromKeystrokes),
-                    "m": Highlighted( ),
                     "": Repeat(
                         count: FromKeystrokes,
                         motion: FromKeystrokes,
