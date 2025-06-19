@@ -66,65 +66,188 @@ Config(
         },
     ),
 
-    color_theme: (
-        row_numbers: (
-            fg: Gray,
-            bg: Reset,
-            modifiers: Modifier(""),
-        ),
-        column_numbers: (
-            fg: Gray,
-            bg: Reset,
-            modifiers: Modifier(""),
-        ),
-        status_bar: (
-            fg: White,
-            bg: DarkGray,
-            modifiers: Modifier(""),
-        ),
-        command_line: (
-            fg: Reset,
-            bg: Reset,
-            modifiers: Modifier(""),
-        ),
-        input_mode: (
-            fg: Reset,
-            bg: Reset,
-            modifiers: Modifier("BOLD"),
-        ),
-        user_feedback: (
-            fg: Reset,
-            bg: Reset,
-            modifiers: Modifier(""),
-        ),
-        canvas: (
-            visual_mode_highlight_bg: Gray,
-            selection_highlight_bg: DarkGray,
-            default_style: (
+    color_themes: {
+        "basic": (
+            row_numbers: (
+                fg: Gray,
+                bg: Reset,
+                modifiers: Modifier(""),
+            ),
+            column_numbers: (
+                fg: Gray,
+                bg: Reset,
+                modifiers: Modifier(""),
+            ),
+            status_bar: (
+                fg: White,
+                bg: DarkGray,
+                modifiers: Modifier(""),
+            ),
+            command_line: (
                 fg: Reset,
                 bg: Reset,
                 modifiers: Modifier(""),
             ),
-            standard_colors: (
-                black: Black,
-                red: Red,
-                green: Green,
-                yellow: Yellow,
-                blue: Blue,
-                magenta: Magenta,
-                cyan: Cyan,
-                white: Gray,
-                bright_black: DarkGray,
-                bright_red: LightRed,
-                bright_green: LightGreen,
-                bright_yellow: LightYellow,
-                bright_blue: LightBlue,
-                bright_magenta: LightMagenta,
-                bright_cyan: LightCyan,
-                bright_white: White,
+            input_mode: (
+                fg: Reset,
+                bg: Reset,
+                modifiers: Modifier("BOLD"),
+            ),
+            user_feedback: (
+                fg: Reset,
+                bg: Reset,
+                modifiers: Modifier(""),
+            ),
+            canvas: (
+                visual_mode_highlight_bg: Gray,
+                selection_highlight_bg: DarkGray,
+                default_style: (
+                    fg: Reset,
+                    bg: Reset,
+                    modifiers: Modifier(""),
+                ),
+                standard_colors: (
+                    black: Black,
+                    red: Red,
+                    green: Green,
+                    yellow: Yellow,
+                    blue: Blue,
+                    magenta: Magenta,
+                    cyan: Cyan,
+                    white: Gray,
+                    bright_black: DarkGray,
+                    bright_red: LightRed,
+                    bright_green: LightGreen,
+                    bright_yellow: LightYellow,
+                    bright_blue: LightBlue,
+                    bright_magenta: LightMagenta,
+                    bright_cyan: LightCyan,
+                    bright_white: White,
+                ),
             ),
         ),
-    ),
+        "campbell": (
+            row_numbers: (
+                fg: Gray,
+                bg: Reset,
+                modifiers: Modifier(""),
+            ),
+            column_numbers: (
+                fg: Gray,
+                bg: Reset,
+                modifiers: Modifier(""),
+            ),
+            status_bar: (
+                fg: White,
+                bg: DarkGray,
+                modifiers: Modifier(""),
+            ),
+            command_line: (
+                fg: Reset,
+                bg: Reset,
+                modifiers: Modifier(""),
+            ),
+            input_mode: (
+                fg: Reset,
+                bg: Reset,
+                modifiers: Modifier("BOLD"),
+            ),
+            user_feedback: (
+                fg: Reset,
+                bg: Reset,
+                modifiers: Modifier(""),
+            ),
+            canvas: (
+                visual_mode_highlight_bg: Gray,
+                selection_highlight_bg: DarkGray,
+                default_style: (
+                    fg: Gray,
+                    bg: Black,
+                    modifiers: Modifier(""),
+                ),
+                standard_colors: (
+                    black: "#0c0c0c",
+                    red: "#c50f1f",
+                    green: "#13a10e",
+                    yellow: "#c19c00",
+                    blue: "#0037da",
+                    magenta: "#881798",
+                    cyan: "#3a96dd",
+                    white: "#cccccc",
+                    bright_black: "#767676",
+                    bright_red: "#e74856",
+                    bright_green: "#16c60c",
+                    bright_yellow: "#f9f1a5",
+                    bright_blue: "#3b78ff",
+                    bright_magenta: "#b7009e",
+                    bright_cyan: "#61d6d6",
+                    bright_white: "#f2f2f2",
+                ),
+            ),
+        ),
+        "monokai": (
+            row_numbers: (
+                fg: Gray,
+                bg: "#272822",
+                modifiers: Modifier(""),
+            ),
+            column_numbers: (
+                fg: Gray,
+                bg: "#272822",
+                modifiers: Modifier(""),
+            ),
+            status_bar: (
+                fg: "#b1b1b1",
+                bg: "#393a31",
+                modifiers: Modifier(""),
+            ),
+            command_line: (
+                fg: Reset,
+                bg: "#272822",
+                modifiers: Modifier(""),
+            ),
+            input_mode: (
+                fg: Reset,
+                bg: "#272822",
+                modifiers: Modifier("BOLD"),
+            ),
+            user_feedback: (
+                fg: Reset,
+                bg: "#272822",
+                modifiers: Modifier(""),
+            ),
+            canvas: (
+                visual_mode_highlight_bg: Gray,
+                selection_highlight_bg: DarkGray,
+                default_style: (
+                    fg: "#ffffff",
+                    bg: "#272822",
+                    modifiers: Modifier(""),
+                ),
+                standard_colors: (
+                    black: "#1a1a1a",
+                    red: "#f4005f",
+                    green: "#98e024",
+                    yellow: "#fa8419",
+                    blue: "#9d65ff",
+                    magenta: "#f332fa",
+                    cyan: "#58d1eb",
+                    white: "#c4c5b5",
+                    bright_black: "#625e4c",
+                    bright_red: "#f4005f",
+                    bright_green: "#98e024",
+                    bright_yellow: "#e0d561",
+                    bright_blue: "#9d65ff",
+                    bright_magenta: "#f332fa",
+                    bright_cyan: "#58d1eb",
+                    bright_white: "#f6f6ef",
+                ),
+            ),
+        ),
+
+    },
+
+    color_theme: "basic",
 
     input_mode: {
         ("i"): (
